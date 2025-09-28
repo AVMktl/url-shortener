@@ -55,6 +55,10 @@ app.get('/:shortCode', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to URL Shortener Service');
+});
+
 // Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
