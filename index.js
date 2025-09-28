@@ -2,9 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const { AzureNamedKeyCredential, TableClient } = require('@azure/data-tables');
 const { nanoid } = require('nanoid');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 const credential = new AzureNamedKeyCredential(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCOUNT_KEY);
 const client = new TableClient(`https://${process.env.AZURE_STORAGE_ACCOUNT}.table.core.windows.net`, process.env.TABLE_NAME, credential);
