@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const API_BASE = "https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net";
 
 export const createShortUrl = async (data) => {
   return axios.post(`${API_BASE}/shorten`, data);
