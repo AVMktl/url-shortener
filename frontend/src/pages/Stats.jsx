@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { getStats } from '../utils/api';
 import { Line } from 'react-chartjs-2';
-import { useEffect } from 'react';
 import 'chart.js/auto';
 
 export default function Stats() {
@@ -52,12 +51,6 @@ export default function Stats() {
       }
     }
   };
-
-  useEffect(() => {
-        if (stats) {
-            console.log('Chart data:', chartData);
-        }
-    }, [stats]);
 
   return (
     <div className="container mx-auto p-4">
