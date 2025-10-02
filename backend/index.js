@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve React build if you have frontend
-app.use(express.static(path.join(__dirname, 'frontend/build')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 const credential = new AzureNamedKeyCredential(
     process.env.AZURE_STORAGE_ACCOUNT,
