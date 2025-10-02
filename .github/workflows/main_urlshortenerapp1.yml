@@ -25,8 +25,12 @@ jobs:
 
       - name: npm install, build, and test
         run: |
+          cd fontend
           npm install
           npm run build --if-present
+          cd ..
+          cd backend
+          npm install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
