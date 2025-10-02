@@ -14,8 +14,11 @@
   "license": "MIT",
   "dependencies": {
     "@azure/data-tables": "^13.3.1",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "nanoid": "^5.1.6"
+    "nanoid": "^5.1.6",
+    "uuid": "^13.0.0"
   }
 }
