@@ -2,6 +2,7 @@
 const express = require('express');
 const { authOptional, requireAuth } = require('../middleware/authMiddleware');
 const { createShortUrl, getShortUrl, incrementClicks, logClick, listUrlsByUser } = require('../models/urlModels');
+const { lookup } = require('fast-geoip');
 
 const router = express.Router();
 
@@ -16,9 +17,6 @@ function isValidUrl(url) {
 
 /**
  * POST /api/shorten
- * { longUrl, alias?, expirationDate? }
- * - Anonymous: alias ignored (random)
- * - Authenticated: alias optional
  */
 router.post('/shorten', authOptional, async (req, res) => {
   try {
@@ -44,7 +42,7 @@ router.post('/shorten', authOptional, async (req, res) => {
 
 /**
  * GET /:alias
- * Redirect to longUrl and log click
+ * Redirect to longUrl and log click with geo info
  */
 router.get('/:alias', async (req, res) => {
   try {
@@ -65,7 +63,13 @@ router.get('/:alias', async (req, res) => {
     const userAgent = req.headers['user-agent'] || 'unknown';
     const referrer = req.headers['referer'] || null;
 
-    await logClick({ alias: entity.rowKey, userAgent, referrer, ip });
+    // Geo lookup
+    const geo = lookup(ip) || {};
+    const country = geo.country || 'unknown';
+    const region = geo.region || 'unknown';
+    const city = geo.city || 'unknown';
+
+    await logClick({ alias: entity.rowKey, userAgent, referrer, ip, country, region, city });
 
     res.redirect(entity.longUrl);
   } catch (err) {
@@ -76,7 +80,6 @@ router.get('/:alias', async (req, res) => {
 
 /**
  * GET /api/history
- * Return all URLs for logged-in user
  */
 router.get('/api/history', requireAuth, async (req, res) => {
   try {

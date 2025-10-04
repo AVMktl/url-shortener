@@ -64,7 +64,7 @@ async function incrementClicks(urlEntity) {
 /**
  * Log click
  */
-async function logClick({ alias, userAgent, referrer, ip, country = 'unknown' }) {
+async function logClick({ alias, userAgent, referrer, ip, country = 'unknown', region = 'unknown', city = 'unknown' }) {
   const entity = {
     partitionKey: alias,
     rowKey: uuidv4(),
@@ -72,7 +72,9 @@ async function logClick({ alias, userAgent, referrer, ip, country = 'unknown' })
     userAgent,
     referrer: referrer || null,
     ip,
-    country
+    country,
+    region,
+    city
   };
   await clicksClient().createEntity(entity);
 }
