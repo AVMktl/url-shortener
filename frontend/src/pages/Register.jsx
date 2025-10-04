@@ -8,10 +8,11 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API || 'https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net';
 
   const handleRegister = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API}/api/auth/register`, { email, password, name }, { withCredentials: true });
+      await axios.post(`${API_URL}/api/auth/register`, { email, password, name }, { withCredentials: true });
       navigate('/dashboard');
       toast.success('Registered successfully!');
     } catch (err) {

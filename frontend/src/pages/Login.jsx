@@ -7,10 +7,11 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API || 'https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net';
 
   const handleLogin = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API}/api/auth/login`, { email, password }, { withCredentials: true });
+      await axios.post(`${API_URL}/api/auth/login`, { email, password }, { withCredentials: true });
       navigate('/dashboard');
       toast.success('Logged in successfully!');
     } catch (err) {

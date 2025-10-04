@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API || "https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net";
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API || "http://localhost:3000",
+  baseURL: API_URL,
   withCredentials: true // ✅ allows cookies to be sent
 });
 
@@ -18,7 +20,7 @@ api.interceptors.response.use(
       try {
         // Try refreshing the token
         await axios.post(
-          `${process.env.REACT_APP_API}/auth/refresh`,
+          `${API_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         );

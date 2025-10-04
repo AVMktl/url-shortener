@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 // ensure axios sends cookies
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_API || '';
+axios.defaults.baseURL = process.env.REACT_APP_API || 'https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net';
 
 const AuthContext = createContext();
 

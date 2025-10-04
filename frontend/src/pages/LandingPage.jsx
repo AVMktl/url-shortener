@@ -8,6 +8,7 @@ export default function LandingPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const API_URL = process.env.REACT_APP_API || 'https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net';
 
   // ✅ Utility to validate URLs
   const isValidUrl = (url) => {
@@ -36,7 +37,7 @@ export default function LandingPage() {
     setCopied(false);
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API}/shorten`,
+        `${API_URL}/shorten`,
         {
           longUrl,
           expirationDate: expiry || null
