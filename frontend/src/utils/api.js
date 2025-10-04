@@ -1,11 +1,39 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE = "https://urlshortenerapp1-hdanbrangkbddxb0.westeurope-01.azurewebsites.net";
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API || "http://localhost:3000",
+  withCredentials: true // ✅ allows cookies to be sent
+});
 
-export const createShortUrl = async (data) => {
-  return axios.post(`${API_BASE}/shorten`, data);
-};
+// Add interceptor to handle expired tokens
+api.interceptors.response.use(
+  response => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-export const getStats = async (alias, password) => {
-  return axios.post(`${API_BASE}/api/stats`, { alias, password });
-};
+    // If 401 and not already retried
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // Try refreshing the token
+        await axios.post(
+          `${process.env.REACT_APP_API}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+
+        // Retry original request
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("Refresh token expired or invalid");
+        // Optionally redirect to login page
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;
