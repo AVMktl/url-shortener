@@ -22,6 +22,7 @@
     "fast-geoip": "^1.1.88",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.1.6",
+    "qrcode": "^1.5.4",
     "uuid": "^13.0.0"
   }
 }
