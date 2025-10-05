@@ -71,7 +71,7 @@ router.get('/qrcode/:alias', authOptional, async (req, res) => {
     const qrDataUrl = await QRCode.toDataURL(shortUrl, {
       width: 200,
       margin: 2,
-      color: { dark: '#349034ff', light: '#000000' }
+      color: { dark: '#22c55e', light: '#000000' }
     });
 
     res.json({ qr: qrDataUrl });
