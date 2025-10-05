@@ -3,6 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createIfNotExists } = require('./config/azureTables');
+const path = require('path');
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
