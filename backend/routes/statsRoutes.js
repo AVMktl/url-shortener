@@ -38,6 +38,9 @@ router.get('/api/stats/:alias', requireAuth, async (req, res) => {
       clicksOverTime: clicks.map(c => ({
         clickedAt: c.clickedAt,
         ip: c.ip,
+        country: c.country,
+        region: c.region,
+        city: c.city,
         referrer: c.referrer,
         userAgent: c.userAgent
       }))

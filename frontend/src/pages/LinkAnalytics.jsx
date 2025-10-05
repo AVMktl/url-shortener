@@ -90,7 +90,7 @@ export default function LinkAnalytics() {
           <h4 className="text-sm text-gray-300 mb-2">Recent clicks</h4>
           <ul className="text-sm">
             { (stats.clicksOverTime || []).slice(0, 10).map((c, i) => (
-              <li key={i} className="text-gray-200">{new Date(c.clickedAt).toLocaleString()} — {c.ip || '—'} — {c.referrer || '—'}</li>
+              <li key={i} className="text-gray-200">{new Date(c.clickedAt).toLocaleString()} — {c.ip || '—'} — {c.referrer || '—'} - {c.country || '—'} - {c.region || '—'} - {c.city || '—'}</li>
             )) }
             { (stats.clicksOverTime || []).length === 0 && <li className="text-gray-400">No clicks</li> }
           </ul>

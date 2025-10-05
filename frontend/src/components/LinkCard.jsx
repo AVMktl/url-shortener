@@ -1,6 +1,7 @@
 import React from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import UserUrlRow from './UserUrlRow';
 
 export default function LinkCard({ u }) {
   const shortUrl = `${process.env.REACT_APP_BASE_URL || window.location.origin}/${u.rowKey}`;
@@ -32,6 +33,7 @@ export default function LinkCard({ u }) {
       <div className="flex gap-2 mt-2">
         <button onClick={copy} className="px-3 py-1 bg-green-600 rounded hover:bg-green-700 text-sm">Copy</button>
         <Link to={`/dashboard/${u.rowKey}`} className="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 text-sm">View stats</Link>
+        <UserUrlRow url={u} className="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 text-sm" />
       </div>
     </div>
   );

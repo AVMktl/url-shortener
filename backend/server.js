@@ -29,11 +29,15 @@ const urlRoutes = require('./routes/urlRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 
 app.use('/api/auth', authRoutes);
-app.use(urlRoutes);
 app.use(statsRoutes);
+app.use(urlRoutes);
 
 // simple health check
 app.get('/health', (req, res) => res.json({ ok: true }));
+
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Not found' });

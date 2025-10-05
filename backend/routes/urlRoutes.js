@@ -3,6 +3,7 @@ const express = require('express');
 const { authOptional, requireAuth } = require('../middleware/authMiddleware');
 const { createShortUrl, getShortUrl, incrementClicks, logClick, listUrlsByUser } = require('../models/urlModels');
 const { lookup } = require('fast-geoip');
+const QRCode = require('qrcode');
 
 const router = express.Router();
 
@@ -41,6 +42,46 @@ router.post('/shorten', authOptional, async (req, res) => {
 });
 
 /**
+ * GET /api/history
+ */
+router.get('/api/history', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const urls = await listUrlsByUser(userId);
+    res.json({ urls });
+  } catch (err) {
+    console.error('history err', err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
+/**
+ * GET /qrcode/:alias
+ * Generate QR code for a given URL
+ */
+router.get('/qrcode/:alias', authOptional, async (req, res) => {
+   try {
+    const { alias } = req.params;
+    const entity = await getShortUrl(alias);
+
+    if (!entity) return res.status(404).json({ error: 'URL not found' });
+    if (entity.userId !== req.user.id) return res.status(403).json({ error: 'Unauthorized' });
+
+    const shortUrl = `${process.env.BASE_URL}/${alias}`;
+    const qrDataUrl = await QRCode.toDataURL(shortUrl, {
+      width: 200,
+      margin: 2,
+      color: { dark: '#00FF00', light: '#000000' }
+    });
+
+    res.json({ qr: qrDataUrl });
+  } catch (err) {
+    console.error('QR generation error:', err);
+    res.status(500).json({ error: 'Failed to generate QR code' });
+  }
+});
+
+/**
  * GET /:alias
  * Redirect to longUrl and log click with geo info
  */
@@ -58,13 +99,25 @@ router.get('/:alias', async (req, res) => {
     // increment clicks
     await incrementClicks(entity);
 
-    // log click
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+
+    // If x-forwarded-for has multiple IPs, take the first
+    ip = ip.split(',')[0].trim();
+
+    // Remove IPv6 prefix (::ffff:)
+    ip = ip.replace('::ffff:', '');
+
+    // Remove port if present (e.g., 223.189.94.131:64188 → 223.189.94.131)
+    ip = ip.split(':')[0];
+
+    // Optional: Handle localhost / testing cases
+    if (ip === '::1' || ip === '127.0.0.1') ip = 'unknown'
+
     const userAgent = req.headers['user-agent'] || 'unknown';
     const referrer = req.headers['referer'] || null;
 
-    // Geo lookup
-    const geo = lookup(ip) || {};
+    // Await the geo lookup!
+    const geo = (await lookup(ip)) || {};
     const country = geo.country || 'unknown';
     const region = geo.region || 'unknown';
     const city = geo.city || 'unknown';
@@ -78,18 +131,5 @@ router.get('/:alias', async (req, res) => {
   }
 });
 
-/**
- * GET /api/history
- */
-router.get('/api/history', requireAuth, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const urls = await listUrlsByUser(userId);
-    res.json({ urls });
-  } catch (err) {
-    console.error('history err', err);
-    res.status(500).json({ error: 'server error' });
-  }
-});
 
 module.exports = router;
