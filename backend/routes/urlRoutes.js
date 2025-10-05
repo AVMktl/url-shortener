@@ -71,7 +71,7 @@ router.get('/qrcode/:alias', authOptional, async (req, res) => {
     const qrDataUrl = await QRCode.toDataURL(shortUrl, {
       width: 200,
       margin: 2,
-      color: { dark: '#00FF00', light: '#000000' }
+      color: { dark: '#349034ff', light: '#000000' }
     });
 
     res.json({ qr: qrDataUrl });
@@ -85,11 +85,11 @@ router.get('/qrcode/:alias', authOptional, async (req, res) => {
  * GET /:alias
  * Redirect to longUrl and log click with geo info
  */
-router.get('/:alias', async (req, res) => {
+router.get('/:alias', async (req, res, next) => {
   try {
     const { alias } = req.params;
     const entity = await getShortUrl(alias);
-    if (!entity) return res.status(404).json({ error: 'URL not found' });
+    if (!entity) return next(); // 404
 
     // check expiry
     if (entity.expirationDate && new Date(entity.expirationDate) < new Date()) {
