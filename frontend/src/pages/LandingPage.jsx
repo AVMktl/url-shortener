@@ -112,7 +112,7 @@ export default function LandingPage() {
           <motion.button
             onClick={handleShorten}
             disabled={loading}
-            className="bg-green-500 hover:bg-green-600 px-4 py-3 rounded font-bold disabled:opacity-50 transition-colors"
+            className="bg-green-500 hover:bg-green-600 px-4 py-3 rounded font-bold disabled:opacity-50 transition-colors text-black "
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
